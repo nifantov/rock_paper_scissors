@@ -55,35 +55,28 @@ function game (amount) {
     if (amount >= 1 && amount <= 10) {
         let computerScore = 0;
         let playerScore = 0;
-
-        for (let i = 0; i < amount; i++) {
-
-            playerSelection = normal(prompt(`Round ${i+1}\nYours beat: `));
+        let roundCounter = 0;    
+        while (computerScore < amount && playerScore < amount) {
+            roundCounter++;
+            playerSelection = normal(prompt(`Round ${roundCounter}\nYours beat: `));
             let computerSelection = computerPlay();
             let winner = round(playerSelection, computerSelection);
             
             if (winner === 0) {
-                console.log(`Round ${i+1} \nI have ${computerSelection} \nTie! ${playerSelection} is equal to ${computerSelection}`);
+                console.log(`Round ${roundCounter} \nI have ${computerSelection} \nTie! ${playerSelection} is equal to ${computerSelection}`);
             }
             else if (winner === 1) {
-                console.log(`Round ${i+1} \nI have ${computerSelection} \nYou lose! ${computerSelection} beats ${playerSelection}`);
+                console.log(`Round ${roundCounter} \nI have ${computerSelection} \nYou lose! ${computerSelection} beats ${playerSelection}`);
                 computerScore++;
             }
             else if (winner === 2) {
-                console.log(`Round ${i+1} \nI have ${computerSelection} \nYou win! ${playerSelection} beats ${computerSelection}`);
+                console.log(`Round ${roundCounter} \nI have ${computerSelection} \nYou win! ${playerSelection} beats ${computerSelection}`);
                 playerScore++;
             }
-            
         }
-
-        if (computerScore === playerScore) {
-            game (1);
-        }
-        else {
-            return {
-                computerScore: computerScore,
-                playerScore: playerScore
-            }
+        return {
+            computerScore: computerScore,
+            playerScore: playerScore
         }
     }
     
