@@ -79,6 +79,7 @@ function game (amount) {
         if (computerScore === playerScore) {
             game (1);
         }
+        
         else {
             return {
                 computerScore: computerScore,
