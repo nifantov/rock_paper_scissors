@@ -1,3 +1,8 @@
+
+let computerScore = 0;
+let playerScore = 0;
+let amount = 5;
+
 //get a random number
 function computerPlay() {
     let x = Math.floor(Math.random() * 3);
@@ -17,8 +22,12 @@ function computerPlay() {
 }
 
 //make one round
-function round(playerSelection, computerSelection) {
+function round(playerSelection) {
+    let computerSelection = computerPlay();
+    playerSR.textContent = playerSelection;
+    computerSR.textContent = computerSelection;
     if (playerSelection === computerSelection) {
+        result.textContent = `Tie! ${playerSelection} is equal to ${computerSelection}`;
         return 0;
     }
     else if (
@@ -26,6 +35,7 @@ function round(playerSelection, computerSelection) {
         playerSelection === "Paper" && computerSelection === "Scissors" || 
         playerSelection === "Scissors" && computerSelection === "Rock"
     ) {
+        result.textContent = `You lose! ${computerSelection} beats ${playerSelection}`;
         return 1;
     }
     else if (
@@ -33,8 +43,10 @@ function round(playerSelection, computerSelection) {
         playerSelection === "Paper" && computerSelection === "Rock" || 
         playerSelection === "Scissors" && computerSelection === "Paper"
     ) {
+        result.textContent = `You win! ${playerSelection} beats ${computerSelection}`;
         return 2;
     }
+    
 }
 
 //make input to normal
@@ -50,53 +62,99 @@ function normal (input) {
     return 0;
 }
 
-//make a game
-function game (amount) {
-    if (amount >= 1 && amount <= 10) {
-        let computerScore = 0;
-        let playerScore = 0;
-        let roundCounter = 0;    
-        while (computerScore < amount && playerScore < amount) {
-            roundCounter++;
-            playerSelection = normal(prompt(`Round ${roundCounter}\nYours beat: `));
-            let computerSelection = computerPlay();
-            let winner = round(playerSelection, computerSelection);
-            
-            if (winner === 0) {
-                console.log(`Round ${roundCounter} \nI have ${computerSelection} \nTie! ${playerSelection} is equal to ${computerSelection}`);
-            }
-            else if (winner === 1) {
-                console.log(`Round ${roundCounter} \nI have ${computerSelection} \nYou lose! ${computerSelection} beats ${playerSelection}`);
-                computerScore++;
-            }
-            else if (winner === 2) {
-                console.log(`Round ${roundCounter} \nI have ${computerSelection} \nYou win! ${playerSelection} beats ${computerSelection}`);
-                playerScore++;
-            }
-        }
-        return {
-            computerScore: computerScore,
-            playerScore: playerScore
-        }
+//counting score every round
+function scoreCounter (winner, amount) {
+    switch (winner) {
+        case 0:
+            break;
+        case 1:
+            computerScore++;
+            break;
+        case 2:
+            playerScore++;
+            break;
     }
-    
-    else {
-        console.log ("Amount of rounds should be from 1 to 10");
-        return 0;
+    playerS.textContent = playerScore;
+    computerS.textContent = computerScore;
+    if (computerScore === amount || playerScore === amount) {
+        print_winner (computerScore, playerScore);
+        disableBtn()
     }
 }
+
+//DOM
+const playerS = document.querySelector("#playerS");
+const computerS = document.querySelector("#computerS");
+const winS = document.querySelector("#winS");
+const result = document.querySelector("#result");
+const playerSR = document.querySelector("#playerSR");
+const computerSR = document.querySelector("#computerSR");
+
+
 
 //print function
 function print_winner(computerScore, playerScore) {
     if (computerScore > playerScore) {
-        console.log(`Computer has: ${computerScore} \nYou have: ${playerScore} \nFinally you LOSE!`)
+        winS.textContent = `Finally you LOSE!`;
     }
     else if (computerScore < playerScore) {
-        console.log(`Computer has: ${computerScore} \nYou have: ${playerScore} \nFinally you WIN!`)
+        winS.textContent = `Finally you WIN!`;
     }
 }
 
-let amount = prompt("How many rounds do you want to play? ");
-let result = game (amount);
-print_winner (result.computerScore, result.playerScore);
+
+const start = document.querySelector('#start');
+start.addEventListener('click', function (e) {
+    restart();
+});
+
+
+function restart() {
+    computerScore = 0;
+    playerScore = 0;
+    winS.textContent = "";
+    playerS.textContent = "0";
+    computerS.textContent = "0";
+    enableBtn();
+    result.textContent = "Make your choice";
+    playerSR.textContent = "-";
+    computerSR.textContent = "-";
+    
+}
+
+function disableBtn() {
+    btnRock.disabled = true;
+    btnPaper.disabled = true;
+    btnScissors.disabled = true;
+}
+
+function enableBtn() {
+    btnRock.disabled = false;
+    btnPaper.disabled = false;
+    btnScissors.disabled = false;
+}
+
+
+
+    //assign button's value to playerSelection 
+    const btnRock = document.querySelector('#rock');
+    btnRock.addEventListener('click', function (e) {
+        scoreCounter(round("Rock"), amount);
+        console.log(computerScore);
+        console.log(playerScore);   
+    });
+
+    const btnPaper = document.querySelector('#paper');
+    btnPaper.addEventListener('click', function (e) {
+        scoreCounter(round("Paper"), amount);
+        console.log(computerScore);
+        console.log(playerScore);  
+    });
+
+    const btnScissors = document.querySelector('#scissors');
+    btnScissors.addEventListener('click', function (e) {
+        scoreCounter(round("Scissors"), amount);
+        console.log(computerScore);
+        console.log(playerScore);  
+    });
 
